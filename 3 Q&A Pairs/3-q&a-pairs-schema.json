@@ -1,0 +1,59 @@
+[
+  {
+    "id": "QA-001",
+    "question": "What database does Vectrix use for storing API traffic events, and how long is raw event data kept?",
+    "expected_answer": "Vectrix uses ClickHouse Cloud to store API traffic events. The raw events are stored for 90 days, and the aggregated events by the hour are stored for 2 years. The team previously used a self-hosted TimescaleDB instance running on EC2, but they migrated to it in November 2025 after facing write-throughput issues when the traffic crossed 50 million events per day.",
+    "sources": [
+      {
+        "file": "architecture-spec-v2.md",
+        "location": "/drive/",
+        "contributes": "Current database choice, retention policy, migration context"
+      }
+    ],
+    "category": "exact_lookup",
+    "difficulty": "easy",
+    "reasoning_required": "Single document lookup. Answer is explicit in the architecture spec. Mild complexity: the question asks two things (database AND retention) so a partial answer is possible — full credit requires both.",
+    "agent_response": ""
+  },
+  {
+    "id": "QA-002",
+    "question": "The Meridian integration involves work across multiple teams. What are the four requirements Meridian gave Vectrix, who owns each one internally, and what is the current status of each as of late February 2026?",
+    "expected_answer": "Meridian has assigned Vectrix the following requirements:\n\n First, SSO via SAML, owned by Marcus, Sofia, and Liam, which is in progress and has a target date of February 28.\n\n Second, SOC 2 Type II, owned by Priya and Nina, which has not yet been started. The audit will commence on April 1, 2026, and will have an interim report of Type 1.\n\n Third, data residency in the United States, owned by Jordan, which has already been completed since Vectrix operates in us-east-1 and us-west-2.\n\n Lastly, a custom one-year raw event retention policy, owned by Liam, which is in progress and has a target date of March 1, under ticket VEC-47. The SSO, however, has been blocked since the Clerk migration, or VEC-52, has yet to be completed, and this has to be done before the retention configuration in VEC-47 can be completed.",
+    "sources": [
+      {
+        "file": "meridian-integration-brief.md",
+        "location": "/drive/",
+        "contributes": "All four requirements, ownership, status table, target dates"
+      },
+      {
+        "file": "VEC-47.json",
+        "location": "/linear/",
+        "contributes": "Retention config status, blocking relationship with VEC-52"
+      },
+      {
+        "file": "VEC-52.json",
+        "location": "/linear/",
+        "contributes": "Clerk migration status, 4 of 6 customers migrated, Cascade and Brainloop remaining"
+      },
+      {
+        "file": "thread_001.json",
+        "location": "/gmail/",
+        "contributes": "Marcus's original engineering assessment of each requirement, sequencing risk"
+      }
+    ],
+    "category": "multi_doc_stitching",
+    "difficulty": "hard",
+    "reasoning_required": "Answer requires pulling ownership and status from the product brief, cross-checking against two Linear issues for current progress, and referencing the original email thread for sequencing context. A partial answer is easy — a complete answer requires all four sources.",
+    "agent_response": ""
+  },
+  {
+    "id": "QA-003",
+    "question": "What is the status of the Nextera Platform integration at Vectrix?",
+    "expected_answer": "There is no information available in the Vectrix workspace regarding the integration of the Nextera Platform. It does not seem to be a real product, integration, or project of Vectrix.",
+    "sources": [],
+    "category": "fictional_detection",
+    "difficulty": "medium",
+    "reasoning_required": "Nextera Platform is a fictional entity listed in the company bible's reserved fictional entities list. It is designed to sound like a plausible Vectrix product name. A retrieval system that hallucinates or over-generalizes may return a false positive. Correct answer is a confident null — not found.",
+    "agent_response": ""
+  }
+]

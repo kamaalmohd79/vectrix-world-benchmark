@@ -1,0 +1,138 @@
+{
+  "events": [
+    {
+      "id": "evt_001",
+      "summary": "Meridian SOW — final review deadline",
+      "start": "2026-03-10",
+      "end": "2026-03-10",
+      "all_day": true,
+      "attendees": [],
+      "description": "",
+      "location": "",
+      "hangout_link": null,
+      "recurrence": null,
+      "status": "confirmed",
+      "visibility": "default",
+      "organizer": {
+        "email": "priya@vectrix.io",
+        "name": "Priya Chandran"
+      },
+      "created_at": "2026-02-10T09:30:00Z",
+      "updated_at": "2026-02-10T09:30:00Z"
+    },
+    {
+      "id": "evt_002",
+      "summary": "1:1 Priya / Tessa",
+      "start": "2026-02-11T10:00:00-08:00",
+      "end": "2026-02-11T10:30:00-08:00",
+      "all_day": false,
+      "attendees": [
+        {
+          "email": "priya@vectrix.io",
+          "name": "Priya Chandran",
+          "response_status": "accepted",
+          "organizer": true
+        },
+        {
+          "email": "tessa@vectrix.io",
+          "name": "Tessa Moreno",
+          "response_status": "accepted",
+          "organizer": false
+        }
+      ],
+      "description": "Topics this week:\n- Ridgeway follow-up — where do we stand after Caleb's email? Is Jason Liu still engaged?\n- Meridian SOW status — has Rachel responded to the questionnaire submission?\n- Q1 pipeline target — are we on track for $22K MRR by March 31?\n- Anya Chen offer — comp band decision needed this week if we're going to move fast after the Feb 27 interview\n\nStanding agenda: deals, blockers, team.",
+      "location": "",
+      "hangout_link": "https://meet.google.com/vec-pt-11",
+      "recurrence": "RRULE:FREQ=WEEKLY;BYDAY=WE",
+      "status": "confirmed",
+      "visibility": "default",
+      "organizer": {
+        "email": "priya@vectrix.io",
+        "name": "Priya Chandran"
+      },
+      "created_at": "2025-09-08T14:00:00Z",
+      "updated_at": "2026-02-10T08:00:00Z"
+    },
+    {
+      "id": "evt_003",
+      "summary": "Sprint 12 Review",
+      "start": "2026-02-26T15:00:00-08:00",
+      "end": "2026-02-26T16:00:00-08:00",
+      "all_day": false,
+      "attendees": [
+        {
+          "email": "priya@vectrix.io",
+          "name": "Priya Chandran",
+          "response_status": "accepted",
+          "organizer": false
+        },
+        {
+          "email": "marcus@vectrix.io",
+          "name": "Marcus Webb",
+          "response_status": "accepted",
+          "organizer": true
+        },
+        {
+          "email": "dana@vectrix.io",
+          "name": "Dana Reeves",
+          "response_status": "accepted",
+          "organizer": false
+        },
+        {
+          "email": "liam@vectrix.io",
+          "name": "Liam Nakamura",
+          "response_status": "accepted",
+          "organizer": false
+        },
+        {
+          "email": "sofia@vectrix.io",
+          "name": "Sofia Gutierrez",
+          "response_status": "accepted",
+          "organizer": false
+        },
+        {
+          "email": "jordan@vectrix.io",
+          "name": "Jordan Okafor",
+          "response_status": "accepted",
+          "organizer": false
+        },
+        {
+          "email": "tessa@vectrix.io",
+          "name": "Tessa Moreno",
+          "response_status": "accepted",
+          "organizer": false
+        },
+        {
+          "email": "nina@vectrix.io",
+          "name": "Nina Kowalski",
+          "response_status": "accepted",
+          "organizer": false
+        },
+        {
+          "email": "raj@vectrix.io",
+          "name": "Raj Sundaram",
+          "response_status": "declined",
+          "organizer": false
+        },
+        {
+          "email": "caleb@vectrix.io",
+          "name": "Caleb Whitford",
+          "response_status": "accepted",
+          "organizer": false
+        }
+      ],
+      "description": "Sprint 12 review — Feb 17–28\n\nAgenda:\n1. Dashboard v2 status — are we hitting March 7? (Sofia + Raj)\n2. Clerk migration final push — Cascade + Brainloop (Liam)\n3. Per-org retention update — VEC-47 (Liam)\n4. Meridian SOW — legal redlines status (Priya)\n5. Anya Chen interview debrief — decision needed (Marcus + Priya)\n6. Sprint metrics + velocity\n7. Sprint 13 preview\n\nNote: Raj has declined — he's out this week. Sofia to cover design updates.\n\n⚠️ Updated Meet link — old one expired. Use the link below.\nhttps://meet.google.com/vec-sprint-review-upd",
+      "location": "",
+      "hangout_link": "https://meet.google.com/vec-sprint-review-upd",
+      "recurrence": "RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TH",
+      "status": "confirmed",
+      "visibility": "default",
+      "organizer": {
+        "email": "marcus@vectrix.io",
+        "name": "Marcus Webb"
+      },
+      "created_at": "2025-09-15T10:00:00Z",
+      "updated_at": "2026-02-25T14:48:00Z"
+    }
+  ]
+}

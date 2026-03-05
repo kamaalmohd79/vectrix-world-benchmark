@@ -1,0 +1,128 @@
+# Sprint 11 Review — Meeting Notes
+
+**Date:** February 14, 2026
+**Time:** 3:00 PM PT
+**Location:** meet.google.com/vec-sprint-review
+**Notetaker:** Dana Reeves
+**Attendees:** Priya, Marcus, Dana, Liam, Sofia, Jordan, Tessa, Nina, Raj
+**Absent:** —
+
+---
+
+## Sprint metrics
+
+- **Velocity:** 31 points (target was 34)
+- **Issues closed:** 18
+- **Issues carried over:** 6
+- **Current version:** v0.15.9
+
+---
+
+## Demo highlights
+
+### Dashboard v2 — Raj + Sofia
+
+Raj walked through the updated endpoint detail page and the new saved views
+feature. Core layout is approved. Color system is consistent now — Raj fixed the
+token mismatch from last sprint that was causing the sidebar to render in the wrong
+gray on Firefox.
+
+Sofia demoed the time range selector. Works correctly across Chrome and Firefox.
+Safari has a rendering issue with the date picker — filed as a bug, not blocking v2
+launch.
+
+> **Marcus (in chat during demo):** the comparison mode mock looks great but I
+> want to be clear this is not in scope for v2. the query engine changes alone are
+> a separate sprint. let's not show this to customers yet.
+
+> **Dana:** noted. disagree but noted.
+
+<!-- Dana's comment: Raj — can you add the mobile viewport screenshots here
+before we share this doc with Priya for the board update? The ones from the Figma
+file, frames 44-47. Thanks — Dana -->
+
+### Clerk migration — Liam + Sofia
+
+80% complete. 4 of 6 existing customers migrated to Clerk. Cascade and Brainloop
+remaining. Liam is handling Cascade manually this week.
+
+One open issue: the Firebase token fallback is logging a warning on every request
+for migrated users — it's noise in the logs but not a functional problem. Liam will
+clean it up in Sprint 12.
+
+### Meridian security questionnaire — Nina
+
+Submitted Jan 31, on time. Rachel Simmons acknowledged receipt. No follow-up
+questions yet. Nina flagged that question 52 (DR plan) required drafting a new
+document from scratch — Jordan wrote a first version, Nina cleaned it up. Doc is
+now in Drive.
+
+---
+
+## Issues carried over to Sprint 12
+
+| Issue                             | Reason                           |
+| --------------------------------- | -------------------------------- |
+| VEC-47 (per-org retention)        | Blocked on VEC-52 completion     |
+| VEC-52 (Clerk migration)          | 2 customers remaining            |
+| VEC-55 (Slack anomaly alerts)     | Scope expanded — see below       |
+| VEC-59 (dashboard mobile layout)  | Deprioritized, not blocking v2   |
+| VEC-64 (ClickHouse query timeout) | Still investigating root cause   |
+| VEC-66 (Safari date picker bug)   | Filed this sprint, carrying over |
+
+---
+
+## Discussion: VEC-55 scope expansion
+
+Tessa raised on behalf of Brainloop (Kevin Park): they want anomaly alerts to
+include the affected endpoint name and current P95 latency in the Slack
+notification body, not just a generic "anomaly detected" message.
+
+Marcus said this is a reasonable ask and probably a 2-point add. Dana
+immediately said she wants to add the threshold value too ("anomaly detected:
+P95 latency 847ms, threshold 200ms"). Marcus: "that's still 2 points."
+Liam: "it's 3."
+
+No final scope decision made in the meeting. Dana will update VEC-55 after
+checking with Kevin on exact requirements.
+
+---
+
+## Incident recap: Feb 20 ClickHouse outage
+
+<!-- Wait — this meeting is Feb 14. The Feb 20 incident hasn't happened yet.
+Jordan flagged this to me after the meeting — I accidentally copy-pasted this
+section from the Sprint 12 planning doc template. Leaving it here so Marcus
+knows to pull it. Will clean up before sharing externally. — Dana -->
+
+---
+
+## Action items
+
+| Owner  | Action                                              | Due       |
+| ------ | --------------------------------------------------- | --------- |
+| Liam   | Complete Cascade Clerk migration                    | Feb 17    |
+| Liam   | Clean up Firebase fallback log warnings             | Sprint 12 |
+| Jordan | Finalize DR plan doc in Drive                       | Feb 16    |
+| Dana   | Update VEC-55 scope with Kevin's exact requirements | Feb 16    |
+| Raj    | Add mobile viewport screenshots to this doc         | Feb 15    |
+| Marcus | Post Sprint 12 retro thread in #engineering         | Feb 17    |
+| Sofia  | File Safari date picker bug formally in GitHub      | Feb 14    |
+
+---
+
+## Sprint 12 preview
+
+Focus areas:
+
+- Finish Clerk migration (VEC-52) — Cascade + Brainloop
+- Per-org retention (VEC-47) — unblocked once VEC-52 lands
+- Dashboard v2 final push — target March 7
+- Meridian SOW review — Orion Legal redlines expected Feb 17
+
+**Next sprint planning:** Monday Feb 17, 10:30 AM PT
+meet.google.com/vec-sprint-plan
+
+---
+
+_Notes by Dana. Lightly edited post-meeting. Ping me if anything looks wrong._

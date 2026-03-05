@@ -1,0 +1,324 @@
+{
+  "project": {
+    "id": "proj_meridian",
+    "name": "Meridian Integration",
+    "slug": "VEC-MERIDIAN",
+    "description": "All engineering and compliance work required to close the Meridian Health Systems deal. Target: March 15, 2026. $2,800/mo Enterprise. P0 — revenue critical.",
+    "status": "In Progress",
+    "lead": {
+      "id": "U_MARCUS",
+      "name": "Marcus Webb",
+      "email": "marcus@vectrix.io"
+    },
+    "members": [
+      { "id": "U_MARCUS", "name": "Marcus Webb" },
+      { "id": "U_LIAM", "name": "Liam Nakamura" },
+      { "id": "U_SOFIA", "name": "Sofia Gutierrez" },
+      { "id": "U_JORDAN", "name": "Jordan Okafor" },
+      { "id": "U_DANA", "name": "Dana Reeves" },
+      { "id": "U_NINA", "name": "Nina Kowalski" }
+    ],
+    "target_date": "2026-03-15",
+    "created_at": "2025-11-21T16:00:00Z",
+    "updated_at": "2026-02-17T11:30:00Z"
+  },
+  "issues": [
+    {
+      "id": "vec47a1b2c",
+      "identifier": "VEC-47",
+      "title": "Implement per-org retention configuration",
+      "description": "## Context\nMeridian requires 1-year raw event retention. Our current retention policy is global — 90 days for raw events, 2 years for hourly aggregates. We need per-org overrides so Enterprise customers can have custom retention without affecting the default for Growth tier.\n\n## What needs to happen\n- Add `retention_days` field to org settings table in PostgreSQL\n- ClickHouse TTL policy needs to respect per-org config rather than global setting\n- Admin UI to configure retention per org (internal-only for now — not customer-facing)\n- Data backfill: Meridian's data should be retained from contract start date\n\n## Acceptance Criteria\n- [ ] Org settings API supports `raw_retention_days` and `aggregate_retention_days` fields\n- [ ] ClickHouse partition TTL respects per-org config\n- [ ] Default behavior unchanged for non-Enterprise orgs\n- [ ] Covered by integration tests\n- [ ] Documented in internal runbook\n\n## Notes\nSee architecture-spec-v2.md in Drive for ClickHouse schema context. This blocks the Meridian SOW — do not let it slip past March 1.\n\nRelated: VEC-52 (Clerk migration) should land first — auth touches the org settings layer.",
+      "status": "In Progress",
+      "priority": 2,
+      "priority_label": "High",
+      "estimate": 5,
+      "assignee": {
+        "id": "U_LIAM",
+        "name": "Liam Nakamura",
+        "email": "liam@vectrix.io"
+      },
+      "creator": {
+        "id": "U_MARCUS",
+        "name": "Marcus Webb",
+        "email": "marcus@vectrix.io"
+      },
+      "labels": ["feature", "meridian", "backend"],
+      "project": {
+        "id": "proj_meridian",
+        "name": "Meridian Integration",
+        "slug": "VEC-MERIDIAN"
+      },
+      "cycle": {
+        "number": 12,
+        "name": "Sprint 12",
+        "start_date": "2026-02-17",
+        "end_date": "2026-02-28"
+      },
+      "parent_issue": null,
+      "sub_issues": [],
+      "relations": [{ "type": "blocked_by", "issue": "VEC-52" }],
+      "created_at": "2026-01-22T10:00:00Z",
+      "updated_at": "2026-02-15T16:30:00Z",
+      "completed_at": null,
+      "cancelled_at": null,
+      "due_date": "2026-03-01",
+      "comments": [
+        {
+          "id": "comment_047_001",
+          "author": { "id": "U_MARCUS", "name": "Marcus Webb" },
+          "body": "This needs to be configurable at the org level, not global. The ClickHouse TTL is currently set as a table-level policy — we'll need to move to partition-level TTL expressions keyed on org_id. Liam, worth reading the ClickHouse docs on `TTL expr + TO DISK` before scoping — the naive approach here will hurt query performance.",
+          "created_at": "2026-01-23T09:15:00Z",
+          "edited_at": null,
+          "reactions": []
+        },
+        {
+          "id": "comment_047_002",
+          "author": { "id": "U_LIAM", "name": "Liam Nakamura" },
+          "body": "read it. partition-level TTL is the right call. one complication: ClickHouse doesn't support row-level TTL on the MergeTree engine without a separate materialized view per org — which doesn't scale. better approach is a background job that runs nightly and deletes rows past the org's retention threshold. less elegant but it works.\n\nwill write up the approach before touching code.",
+          "created_at": "2026-01-24T14:02:00Z",
+          "edited_at": null,
+          "reactions": [
+            { "emoji": "thumbsup", "users": ["U_MARCUS"], "count": 1 }
+          ]
+        },
+        {
+          "id": "comment_047_003",
+          "author": { "id": "U_PRIYA", "name": "Priya Chandran" },
+          "body": "this is blocking the Meridian deal, prioritize",
+          "created_at": "2026-02-03T08:44:00Z",
+          "edited_at": null,
+          "reactions": [
+            { "emoji": "eyes", "users": ["U_MARCUS", "U_LIAM"], "count": 2 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vec52b3c4d",
+      "identifier": "VEC-52",
+      "title": "Migrate auth from Firebase to Clerk (SAML SSO support)",
+      "description": "## Context\nFirebase Auth doesn't support org-level SAML. Meridian requires SAML SSO before they'll sign. Clerk is the chosen replacement — supports SAML and OIDC natively, has a good Go SDK, and integrates cleanly with our Next.js frontend.\n\nMarcus's comparison doc: https://drive.google.com/drive/folders/vectrix/auth-provider-comparison.md\n\n## Scope\n### Backend (Liam)\n- Replace Firebase token validation middleware with Clerk JWT verification\n- Update org creation flow to support Clerk org IDs\n- Handle Firebase token fallback for existing users during migration window\n- Session management: move from Firebase session cookies to Clerk sessions\n\n### Frontend (Sofia)\n- Replace Firebase Auth SDK with Clerk React components\n- Update login, signup, and org invite flows\n- Add SAML SSO configuration UI for Enterprise orgs\n- Test across Chrome, Firefox, Safari\n\n## Acceptance Criteria\n- [ ] All new signups use Clerk\n- [ ] Existing Firebase users migrated without re-login required\n- [ ] SAML SSO flow tested end-to-end with a test IdP (Okta dev account)\n- [ ] Firebase Auth dependency removed from codebase\n- [ ] Zero auth-related errors in Sentry for 48hrs post-cutover\n\n## Risk\nThis touches every authenticated route. Ship incrementally. Do not merge the Firebase removal until all existing customers are confirmed migrated.",
+      "status": "In Progress",
+      "priority": 1,
+      "priority_label": "Urgent",
+      "estimate": 13,
+      "assignee": {
+        "id": "U_SOFIA",
+        "name": "Sofia Gutierrez",
+        "email": "sofia@vectrix.io"
+      },
+      "creator": {
+        "id": "U_MARCUS",
+        "name": "Marcus Webb",
+        "email": "marcus@vectrix.io"
+      },
+      "labels": ["feature", "meridian", "auth", "frontend", "backend"],
+      "project": {
+        "id": "proj_meridian",
+        "name": "Meridian Integration",
+        "slug": "VEC-MERIDIAN"
+      },
+      "cycle": {
+        "number": 12,
+        "name": "Sprint 12",
+        "start_date": "2026-02-17",
+        "end_date": "2026-02-28"
+      },
+      "parent_issue": null,
+      "sub_issues": [],
+      "relations": [{ "type": "blocks", "issue": "VEC-47" }],
+      "created_at": "2025-12-12T11:00:00Z",
+      "updated_at": "2026-02-17T10:00:00Z",
+      "completed_at": null,
+      "cancelled_at": null,
+      "due_date": "2026-02-28",
+      "comments": [
+        {
+          "id": "comment_052_001",
+          "author": { "id": "U_SOFIA", "name": "Sofia Gutierrez" },
+          "body": "frontend side is ~80% done. login + signup flows are on Clerk, invite flow is the last piece. found a weird edge case where users with existing Firebase sessions get a CORS error on the token exchange endpoint — @liam is this on your side or mine?\n\n![clerk-cors-error](https://linear-uploads.s3.amazonaws.com/placeholder/clerk-cors-error-screenshot.png)",
+          "created_at": "2026-02-12T15:30:00Z",
+          "edited_at": null,
+          "reactions": []
+        },
+        {
+          "id": "comment_052_002",
+          "author": { "id": "U_LIAM", "name": "Liam Nakamura" },
+          "body": "yours. the token exchange endpoint allows clerk.vectrix.io origin but not app.vectrix.io — CORS config in `internal/middleware/cors.go` line 34. one-line fix.",
+          "created_at": "2026-02-12T16:01:00Z",
+          "edited_at": null,
+          "reactions": [{ "emoji": "pray", "users": ["U_SOFIA"], "count": 1 }]
+        },
+        {
+          "id": "comment_052_003",
+          "author": { "id": "U_MARCUS", "name": "Marcus Webb" },
+          "body": "status check: where are we on the 6 existing customer migrations? Meridian can't be the first — we need at least one Enterprise customer (Cascade) successfully migrated on Clerk before we enable SSO for Meridian.",
+          "created_at": "2026-02-15T09:00:00Z",
+          "edited_at": null,
+          "reactions": []
+        },
+        {
+          "id": "comment_052_004",
+          "author": { "id": "U_LIAM", "name": "Liam Nakamura" },
+          "body": "4 of 6 migrated. Cascade and Brainloop still on Firebase. Cascade is priority — I'll do their migration manually this week with Jordan on standby. Brainloop can follow.",
+          "created_at": "2026-02-15T11:22:00Z",
+          "edited_at": null,
+          "reactions": [
+            { "emoji": "white_check_mark", "users": ["U_MARCUS"], "count": 1 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vec58c5d6e",
+      "identifier": "VEC-58",
+      "title": "Complete Meridian security questionnaire responses",
+      "description": "## Context\nMeridian sent their standard vendor security assessment on Jan 20. 147 questions across 9 categories. Rachel Simmons (Security & Compliance Lead) is the point of contact. Responses due Jan 31 (10 business days).\n\n## Ownership by section\n| Section | Owner | Status |\n|---|---|---|\n| 1 - Data Security | Nina | In Progress |\n| 2 - Access Control | Marcus | In Progress |\n| 3 - Incident Response | Nina + Jordan | In Progress |\n| 4 - Compliance | Nina (Priya review) | In Progress |\n| 5 - Business Continuity | Nina | Not started |\n| 6 - Data Residency | Marcus | Done |\n| 7 - Vendor Management | Nina | Not started |\n| 8 - Encryption | Marcus | Not started |\n| 9 - Physical Security | Nina | Not started |\n\n## Notes\n- SOC 2 Type I report is in Drive — Nina to attach\n- Question 38 (data breach notification policy) — Nina to draft from scratch, no existing doc\n- SAML SSO status: note as 'in progress, target Feb 28'\n- Do not send until Priya has reviewed Section 4 in full",
+      "status": "In Progress",
+      "priority": 2,
+      "priority_label": "High",
+      "estimate": 3,
+      "assignee": {
+        "id": "U_NINA",
+        "name": "Nina Kowalski",
+        "email": "nina@vectrix.io"
+      },
+      "creator": {
+        "id": "U_NINA",
+        "name": "Nina Kowalski",
+        "email": "nina@vectrix.io"
+      },
+      "labels": ["compliance", "meridian", "ops"],
+      "project": {
+        "id": "proj_meridian",
+        "name": "Meridian Integration",
+        "slug": "VEC-MERIDIAN"
+      },
+      "cycle": {
+        "number": 11,
+        "name": "Sprint 11",
+        "start_date": "2026-02-03",
+        "end_date": "2026-02-14"
+      },
+      "parent_issue": null,
+      "sub_issues": [],
+      "relations": [],
+      "created_at": "2026-01-20T16:00:00Z",
+      "updated_at": "2026-01-28T14:00:00Z",
+      "completed_at": null,
+      "cancelled_at": null,
+      "due_date": "2026-01-31",
+      "comments": [
+        {
+          "id": "comment_058_001",
+          "author": { "id": "U_NINA", "name": "Nina Kowalski" },
+          "body": "Shared doc is live in Drive for tracking responses. Jordan — I need your input on Section 3 (Incident Response), specifically questions 41-47. They're asking about our on-call structure, escalation path, and P1 response SLAs. Can you fill in what you know and I'll clean it up?\n\nAlso flagging: question 52 asks whether we have a formal DR (disaster recovery) plan document. Do we? I couldn't find one in Drive.",
+          "created_at": "2026-01-21T10:30:00Z",
+          "edited_at": null,
+          "reactions": []
+        },
+        {
+          "id": "comment_058_002",
+          "author": { "id": "U_JORDAN", "name": "Jordan Okafor" },
+          "body": "on it for 41-47. DR plan: we don't have a formal doc. the actual DR setup is cross-region S3 backups + EKS failover config but nobody wrote it up. I'll draft something this week.",
+          "created_at": "2026-01-21T13:45:00Z",
+          "edited_at": null,
+          "reactions": []
+        }
+      ]
+    },
+    {
+      "id": "vec61d7e8f",
+      "identifier": "VEC-61",
+      "title": "Draft and send Meridian SOW for legal review",
+      "description": "## Context\nMeridian sent a draft SOW on Feb 10. Terms:\n- $2,800/mo Enterprise, 12-month term\n- 99.9% uptime SLA with financial credits\n- Custom 1-year raw retention\n- Data residency: US-only\n- SOC 2 Type II required before contract execution (interim: Type I + commitment letter)\n- Termination: 60-day written notice. Immediate termination for material breach or SLA failure >3 consecutive months.\n\nJames Hartley at Orion Legal is reviewing. Priya and Nina are internal reviewers.\n\n## Status\nOrion Legal has the draft. Expecting redlines back by Feb 17.\n\n## Open items\n- [ ] Legal redlines incorporated\n- [ ] Priya sign-off\n- [ ] SOC 2 Type II commitment letter drafted (Nina)\n- [ ] Countersigned copy sent to Rachel Simmons",
+      "status": "Todo",
+      "priority": 1,
+      "priority_label": "Urgent",
+      "estimate": 2,
+      "assignee": {
+        "id": "U_PRIYA",
+        "name": "Priya Chandran",
+        "email": "priya@vectrix.io"
+      },
+      "creator": {
+        "id": "U_PRIYA",
+        "name": "Priya Chandran",
+        "email": "priya@vectrix.io"
+      },
+      "labels": ["legal", "meridian", "ops"],
+      "project": {
+        "id": "proj_meridian",
+        "name": "Meridian Integration",
+        "slug": "VEC-MERIDIAN"
+      },
+      "cycle": {
+        "number": 12,
+        "name": "Sprint 12",
+        "start_date": "2026-02-17",
+        "end_date": "2026-02-28"
+      },
+      "parent_issue": null,
+      "sub_issues": [],
+      "relations": [],
+      "created_at": "2026-02-10T09:00:00Z",
+      "updated_at": "2026-02-10T09:00:00Z",
+      "completed_at": null,
+      "cancelled_at": null,
+      "due_date": "2026-02-28",
+      "comments": []
+    },
+    {
+      "id": "vec63e9f0a",
+      "identifier": "VEC-63",
+      "title": "Meridian demo environment setup",
+      "description": "stand up a isolated demo org in prod for Alan's team to evaluate. needs to be pre-populated with realistic synthetic API traffic so the dashboard isn't empty on the call.\n\njordan to provision, liam to write the traffic gen script",
+      "status": "Done",
+      "priority": 2,
+      "priority_label": "High",
+      "estimate": 2,
+      "assignee": {
+        "id": "U_JORDAN",
+        "name": "Jordan Okafor",
+        "email": "jordan@vectrix.io"
+      },
+      "creator": {
+        "id": "U_MARCUS",
+        "name": "Marcus Webb",
+        "email": "marcus@vectrix.io"
+      },
+      "labels": ["infra", "meridian"],
+      "project": {
+        "id": "proj_meridian",
+        "name": "Meridian Integration",
+        "slug": "VEC-MERIDIAN"
+      },
+      "cycle": {
+        "number": 10,
+        "name": "Sprint 10",
+        "start_date": "2026-01-20",
+        "end_date": "2026-01-31"
+      },
+      "parent_issue": null,
+      "sub_issues": [],
+      "relations": [],
+      "created_at": "2026-01-06T14:00:00Z",
+      "updated_at": "2026-01-27T17:30:00Z",
+      "completed_at": "2026-01-27T17:30:00Z",
+      "cancelled_at": null,
+      "due_date": "2026-01-30",
+      "comments": [
+        {
+          "id": "comment_063_001",
+          "author": { "id": "U_JORDAN", "name": "Jordan Okafor" },
+          "body": "demo org is live. org_id: `meridian-demo-01`. provisioned with 30 days of synthetic traffic across 12 endpoints. Liam's script is in `scripts/traffic-gen/` — README explains the parameters.\n\ndashboard looks good. anomaly detection fired correctly on the synthetic latency spike we injected. marking done.",
+          "created_at": "2026-01-27T17:30:00Z",
+          "edited_at": null,
+          "reactions": [
+            { "emoji": "rocket", "users": ["U_MARCUS", "U_PRIYA"], "count": 2 }
+          ]
+        }
+      ]
+    }
+  ]
+}

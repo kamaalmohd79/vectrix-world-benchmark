@@ -1,0 +1,155 @@
+# Meridian Integration — Product Brief
+
+**Document owner:** Dana Reeves
+**Created:** 2025-11-24
+**Last updated:** 2026-01-28
+**Status:** Living document — updated as requirements evolve
+**Drive path:** /drive/meridian-integration-brief.md
+
+---
+
+## Why this exists
+
+Meridian Health Systems is the largest deal in our pipeline. $2,800/mo Enterprise,
+12-month term. They're evaluating us against Datadog's API monitoring offering.
+We win on price and purpose-built focus. We lose if we can't check their compliance
+boxes.
+
+This brief exists so everyone — eng, sales, ops — has the same picture of what
+we're building, why, and in what order.
+
+---
+
+## The customer
+
+**Meridian Health Systems**
+
+- 400 employees, Series D healthtech company
+- 85 engineers, 200+ internal APIs
+- HQ: Boston, MA
+- Decision-maker: Dr. Alan Fong, VP of Engineering
+- Gatekeeper: Rachel Simmons, Security & Compliance Lead
+
+Rachel is the person who will kill this deal if we don't answer her questionnaire
+correctly. Alan is the person who wants to buy. Our job is to give Rachel nothing
+to object to.
+
+---
+
+## Requirements (non-negotiable)
+
+These came directly from the Nov 20 call with Alan. All four are hard requirements —
+missing any one of them is a disqualifier.
+
+| Requirement                | Owner                 | Status            | Target              |
+| -------------------------- | --------------------- | ----------------- | ------------------- |
+| SSO via SAML               | Marcus / Sofia / Liam | In Progress       | Feb 28              |
+| SOC 2 Type II              | Priya / Nina          | Scheduled Q2 2026 | Apr 1 (audit start) |
+| Data residency (US-only)   | Jordan                | Done              | —                   |
+| Custom retention (1yr raw) | Liam                  | In Progress       | Mar 1               |
+
+**On SOC 2:** We have Type I. Meridian wants Type II. The gap is a 3-month
+observation window — we can't compress that. What we can do is provide our Type I
+report plus a written commitment letter for Type II. Rachel has accepted this as an
+interim measure. The SOW reflects this.
+
+---
+
+## What we're building
+
+### 1. Auth migration (Firebase → Clerk)
+
+See VEC-52. This is the critical path item — everything else depends on auth being
+stable. Clerk supports SAML/OIDC natively. Migration is incremental: new signups
+on Clerk first, existing customers migrated in batches. Firebase stays live in
+read-only fallback until all customers are confirmed on Clerk.
+
+Do not let anyone ship the Firebase removal before all 6 existing customers
+are migrated. This is a hard rule.
+
+### 2. Per-org retention configuration
+
+See VEC-47. Today retention is global (90 days raw, 2 years aggregated). Meridian
+needs 1 year raw. We're building per-org config so this is extensible — future
+Enterprise customers will want the same thing.
+
+> **Note from Dana (Jan 28):** Marcus and I disagree on implementation approach
+> here. I want the retention config to be customer-facing (visible in the settings UI).
+> Marcus wants it internal-only for now ("we don't want customers managing their own
+> TTL policies"). I think we're leaving value on the table but I've agreed to ship
+> internal-only for v1 and revisit. Flagging so the decision is documented.
+
+### 3. Security questionnaire
+
+See VEC-58. Nina is coordinating. 147 questions, due Jan 31. The questionnaire
+is the gate before the SOW gets signed — Rachel won't move forward without it.
+
+### 4. SOW review and execution
+
+See VEC-61. Orion Legal has the draft. Key commercial terms:
+
+- $2,800/mo, 12-month term
+- 99.9% uptime SLA (vs our standard 99.5% for Cascade)
+- Financial credits: 5% of monthly fee per 0.1% below SLA, capped at 30%
+- Termination: 60-day written notice
+
+---
+
+## What we're NOT building (for Meridian)
+
+- HIPAA compliance — Meridian hasn't required it. They're using Vectrix for
+  engineering metrics, not PHI. If this changes, it's a separate conversation.
+- EU data residency — not applicable, Meridian is US-only
+- Full APM / distributed tracing — out of scope for Vectrix entirely
+
+---
+
+## Timeline
+
+| Date         | Event                            |
+| ------------ | -------------------------------- |
+| Nov 15, 2025 | Threshold intro to Meridian      |
+| Nov 20, 2025 | First call — requirements shared |
+| Jan 20, 2026 | Security questionnaire received  |
+| Jan 31, 2026 | Questionnaire response due       |
+| Feb 10, 2026 | Draft SOW received from Meridian |
+| Feb 17, 2026 | Orion Legal redlines expected    |
+| Feb 28, 2026 | Clerk migration target           |
+| Mar 1, 2026  | Retention config target          |
+| Mar 10, 2026 | SOW final review deadline        |
+| Mar 15, 2026 | Target close                     |
+| Apr 1, 2026  | SOC 2 Type II audit start        |
+
+---
+
+## Risks
+
+**1. Clerk migration slips**
+If VEC-52 slips past Feb 28, the SAML SSO demo we've promised Alan can't happen.
+This is the #1 risk. Marcus is watching it daily.
+
+**2. Rachel kills the deal on SOC 2**
+We've managed this with the commitment letter approach. If Rachel changes her
+position and requires Type II before signing, we have no good answer. Priya is
+managing the relationship.
+
+**3. SLA exposure**
+99.9% uptime is a higher bar than our current 99.7% track record (Q4 2025).
+The Feb 20 incident (45 min of stale data for Cascade) would have triggered
+credits under the Meridian SLA. Jordan is working on ClickHouse maintenance
+window coordination to close this gap.
+
+---
+
+## Open questions
+
+- [ ] Will Meridian accept a phased SSO rollout (SAML config available but not
+      required at contract start)?
+- [ ] Does the 1-year retention commitment need to be in the SOW or just in the
+      security questionnaire?
+- [ ] If we miss the Mar 15 close date, does the Threshold Q1 pipeline target
+      still hold?
+
+---
+
+_— Dana_

@@ -1,0 +1,106 @@
+{
+    "thread_id": "thread_001",
+    "subject": "Meridian SSO + retention requirements — eng implications",
+    "messages": [
+        {
+            "message_id": "msg_001a",
+            "from": {
+                "name": "Priya Chandran",
+                "email": "priya@vectrix.io"
+            },
+            "to": [
+                {
+                    "name": "Marcus Webb",
+                    "email": "marcus@vectrix.io"
+                },
+                {
+                    "name": "Dana Reeves",
+                    "email": "dana@vectrix.io"
+                }
+            ],
+            "cc": [],
+            "bcc": [],
+            "date": "2025-11-21T09:14:00-08:00",
+            "body_text": "Call with Meridian yesterday went well. Alan is serious. They have four hard requirements before they'll sign anything:\n\n1. SSO via SAML\n2. SOC 2 Type II (we have Type I — they want Type II before contract execution)\n3. Data residency in US regions only\n4. Custom retention — 1 year for raw events, not our standard 90 days\n\nMarcus, I need to know which of these are blockers and roughly how long each takes. Dana, start thinking about how we scope this in Linear.\n\nTarget close is Q1. We can't miss this one.",
+            "body_html": "<p>Call with Meridian yesterday went well. Alan is serious. They have four hard requirements before they'll sign anything:</p><ol><li>SSO via SAML</li><li>SOC 2 Type II (we have Type I — they want Type II before contract execution)</li><li>Data residency in US regions only</li><li>Custom retention — 1 year for raw events, not our standard 90 days</li></ol><p>Marcus, I need to know which of these are blockers and roughly how long each takes. Dana, start thinking about how we scope this in Linear.</p><p>Target close is Q1. We can't miss this one.</p>",
+            "attachments": [],
+            "in_reply_to": null,
+            "references": [],
+            "labels": [
+                "INBOX",
+                "IMPORTANT"
+            ],
+            "is_read": true,
+            "is_starred": true,
+            "signature": null
+        },
+        {
+            "message_id": "msg_001b",
+            "from": {
+                "name": "Marcus Webb",
+                "email": "marcus@vectrix.io"
+            },
+            "to": [
+                {
+                    "name": "Priya Chandran",
+                    "email": "priya@vectrix.io"
+                },
+                {
+                    "name": "Dana Reeves",
+                    "email": "dana@vectrix.io"
+                }
+            ],
+            "cc": [],
+            "bcc": [],
+            "date": "2025-11-21T13:47:00-05:00",
+            "body_text": "Quick read on each:\n\n1. SSO (SAML) — Firebase Auth doesn't support org-level SAML. We'd need to migrate to Clerk or Auth0. Clerk is the cleaner path — evaluated it in the past, native SAML/OIDC support, good Next.js SDK. Migration is probably 3-4 weeks including testing. This is the biggest lift.\n\n2. SOC 2 Type II — not an engineering problem. That's a 3-month observation window with Vanta. Priya, you and Nina own this. We're already passing most controls from Type I.\n\n3. Data residency — we're already us-east-1 and us-west-2 only. Nothing to do here.\n\n4. Custom retention — requires per-org retention config in ClickHouse. We don't have that today. Liam can scope it but rough estimate is 2 weeks.\n\nReal sequencing risk: Clerk migration should start before the retention work because auth touches everything. If we start both in parallel we'll have a bad time.\n\nI'll write up a proper RFC next week.\n\n-M",
+            "body_html": "<p>Quick read on each:</p><ol><li><strong>SSO (SAML)</strong> — Firebase Auth doesn't support org-level SAML. We'd need to migrate to Clerk or Auth0. Clerk is the cleaner path — evaluated it in the past, native SAML/OIDC support, good Next.js SDK. Migration is probably 3-4 weeks including testing. This is the biggest lift.</li><li><strong>SOC 2 Type II</strong> — not an engineering problem. That's a 3-month observation window with Vanta. Priya, you and Nina own this. We're already passing most controls from Type I.</li><li><strong>Data residency</strong> — we're already us-east-1 and us-west-2 only. Nothing to do here.</li><li><strong>Custom retention</strong> — requires per-org retention config in ClickHouse. We don't have that today. Liam can scope it but rough estimate is 2 weeks.</li></ol><p>Real sequencing risk: Clerk migration should start before the retention work because auth touches everything. If we start both in parallel we'll have a bad time.</p><p>I'll write up a proper RFC next week.</p><p>-M</p>",
+            "attachments": [],
+            "in_reply_to": "msg_001a",
+            "references": [
+                "msg_001a"
+            ],
+            "labels": [
+                "INBOX",
+                "IMPORTANT"
+            ],
+            "is_read": true,
+            "is_starred": false,
+            "signature": "-M"
+        },
+        {
+            "message_id": "msg_001c",
+            "from": {
+                "name": "Dana Reeves",
+                "email": "dana@vectrix.io"
+            },
+            "to": [
+                {
+                    "name": "Priya Chandran",
+                    "email": "priya@vectrix.io"
+                },
+                {
+                    "name": "Marcus Webb",
+                    "email": "marcus@vectrix.io"
+                }
+            ],
+            "cc": [],
+            "bcc": [],
+            "date": "2025-11-21T12:03:00-08:00",
+            "body_text": "Marcus — this is really helpful framing, thank you.\n\nA few things I'm thinking through:\n\n**Scoping question for you:** Is the Clerk migration something we can ship incrementally (new users on Clerk, existing on Firebase until migrated) or is it a hard cutover? That changes how I story-map it in Linear.\n\n**On the retention config:** I want to make sure we build this generically enough that it's not just a Meridian one-off. If we're doing per-org retention, other Enterprise customers will want this too. Worth a quick convo before Liam starts scoping.\n\n**SOC 2:** Agree it's mostly non-eng, but there are a few controls that touch the codebase (audit logging, access control). Flagging so it doesn't land on eng as a surprise mid-sprint.\n\nI'll open the VEC-MERIDIAN project in Linear today and start breaking down the four requirements into stories. Will share a draft for review before EOW.\n\n— Dana",
+            "body_html": "<p>Marcus — this is really helpful framing, thank you.</p><p>A few things I'm thinking through:</p><p><strong>Scoping question for you:</strong> Is the Clerk migration something we can ship incrementally (new users on Clerk, existing on Firebase until migrated) or is it a hard cutover? That changes how I story-map it in Linear.</p><p><strong>On the retention config:</strong> I want to make sure we build this generically enough that it's not just a Meridian one-off. If we're doing per-org retention, other Enterprise customers will want this too. Worth a quick convo before Liam starts scoping.</p><p><strong>SOC 2:</strong> Agree it's mostly non-eng, but there are a few controls that touch the codebase (audit logging, access control). Flagging so it doesn't land on eng as a surprise mid-sprint.</p><p>I'll open the VEC-MERIDIAN project in Linear today and start breaking down the four requirements into stories. Will share a draft for review before EOW.</p><p>— Dana</p>",
+            "attachments": [],
+            "in_reply_to": "msg_001b",
+            "references": [
+                "msg_001a",
+                "msg_001b"
+            ],
+            "labels": [
+                "INBOX"
+            ],
+            "is_read": true,
+            "is_starred": false,
+            "signature": "— Dana"
+        }
+    ]
+}

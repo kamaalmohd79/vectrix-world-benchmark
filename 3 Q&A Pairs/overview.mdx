@@ -1,0 +1,10 @@
+## What each pair tests:
+
+**QA-001 — Exact lookup (easy)**
+Straightforward single-source retrieval. The mild trap is that the question asks for two things — database AND retention period — so a weak retrieval system might answer one and miss the other. Also seeds a potential version conflict test: a system that finds architecture-spec-v1.md instead of v2 will return the wrong retention number (180 days instead of 90).
+
+**QA-002 — Multi-doc stitching (hard)**
+This is the most demanding pair. A complete answer requires the product brief for the requirements table, two Linear issues for current engineering status, and the internal email thread for sequencing context. No single source has the full picture. This is exactly the kind of question Frank described — answer buried across four files, three platforms, two months of timeline.
+
+**QA-003 — Fictional detection (medium)**
+Nextera Platform is one of the reserved fictional entities from bible Section 12. The difficulty is medium rather than easy because the name is plausible enough that a hallucinating system might invent a connection to a real Vectrix feature. The correct answer is a confident null — not "I'm not sure" but "this doesn't exist."

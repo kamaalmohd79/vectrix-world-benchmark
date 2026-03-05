@@ -1,0 +1,79 @@
+{
+  "thread_id": "thread_002",
+  "subject": "Vectrix vendor security assessment — questionnaire attached",
+  "messages": [
+    {
+      "message_id": "msg_002a",
+      "from": {
+        "name": "Rachel Simmons",
+        "email": "rachel.simmons@meridianhealth.com"
+      },
+      "to": [{ "name": "Priya Chandran", "email": "priya@vectrix.io" }],
+      "cc": [
+        { "name": "Dr. Alan Fong", "email": "alan.fong@meridianhealth.com" }
+      ],
+      "bcc": [],
+      "date": "2026-01-20T10:22:00-05:00",
+      "body_text": "Hi Priya,\n\nFollowing up on our call last week — as discussed, our procurement process requires all new vendors to complete a security and compliance assessment before we can proceed to contract.\n\nI've attached our standard questionnaire (147 questions across 9 categories). A few things to flag upfront:\n\n- Section 4 (Compliance) includes a request for your SOC 2 Type II report. Alan mentioned you're currently at Type I — please provide the Type I report for now and include your expected timeline for Type II completion.\n- Section 6 (Data Residency) will require confirmation of your AWS region configuration in writing.\n- Section 2 (Access Control) asks about SSO/SAML support — please note the status of your implementation even if it's in progress.\n\nOur target is to have responses back within 10 business days. If certain sections require input from your engineering or legal team, please coordinate internally — we'd prefer one consolidated response rather than multiple partial submissions.\n\nHappy to get on a call if any questions are unclear.\n\nRachel Simmons\nSecurity & Compliance Lead, Meridian Health Systems\nrachel.simmons@meridianhealth.com",
+      "body_html": "<p>Hi Priya,</p><p>Following up on our call last week — as discussed, our procurement process requires all new vendors to complete a security and compliance assessment before we can proceed to contract.</p><p>I've attached our standard questionnaire (147 questions across 9 categories). A few things to flag upfront:</p><ul><li>Section 4 (Compliance) includes a request for your SOC 2 Type II report. Alan mentioned you're currently at Type I — please provide the Type I report for now and include your expected timeline for Type II completion.</li><li>Section 6 (Data Residency) will require confirmation of your AWS region configuration in writing.</li><li>Section 2 (Access Control) asks about SSO/SAML support — please note the status of your implementation even if it's in progress.</li></ul><p>Our target is to have responses back within 10 business days. If certain sections require input from your engineering or legal team, please coordinate internally — we'd prefer one consolidated response rather than multiple partial submissions.</p><p>Happy to get on a call if any questions are unclear.</p><p>Rachel Simmons<br>Security &amp; Compliance Lead, Meridian Health Systems<br>rachel.simmons@meridianhealth.com</p>",
+      "attachments": [
+        {
+          "filename": "meridian-security-questionnaire.xlsx",
+          "mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "size_bytes": 184320
+        }
+      ],
+      "in_reply_to": null,
+      "references": [],
+      "labels": ["INBOX", "IMPORTANT"],
+      "is_read": true,
+      "is_starred": true,
+      "signature": "Rachel Simmons\nSecurity & Compliance Lead, Meridian Health Systems\nrachel.simmons@meridianhealth.com"
+    },
+    {
+      "message_id": "msg_002b",
+      "from": { "name": "Priya Chandran", "email": "priya@vectrix.io" },
+      "to": [
+        {
+          "name": "Rachel Simmons",
+          "email": "rachel.simmons@meridianhealth.com"
+        }
+      ],
+      "cc": [
+        { "name": "Nina Kowalski", "email": "nina@vectrix.io" },
+        { "name": "Marcus Webb", "email": "marcus@vectrix.io" }
+      ],
+      "bcc": [],
+      "date": "2026-01-20T14:05:00-08:00",
+      "body_text": "Rachel — thank you, we'll get started on this today.\n\nOn the SOC 2 question: I'll include our Type I report with this response. We've committed to a Type II audit starting Q2 2026 — I'll put that in writing in the questionnaire.\n\nNina and Marcus are CC'd and will coordinate the internal responses. We'll aim to turn this around in 7 business days, ahead of your deadline.\n\nPriya",
+      "body_html": "<p>Rachel — thank you, we'll get started on this today.</p><p>On the SOC 2 question: I'll include our Type I report with this response. We've committed to a Type II audit starting Q2 2026 — I'll put that in writing in the questionnaire.</p><p>Nina and Marcus are CC'd and will coordinate the internal responses. We'll aim to turn this around in 7 business days, ahead of your deadline.</p><p>Priya</p>",
+      "attachments": [],
+      "in_reply_to": "msg_002a",
+      "references": ["msg_002a"],
+      "labels": ["INBOX", "IMPORTANT"],
+      "is_read": true,
+      "is_starred": false,
+      "signature": null
+    },
+    {
+      "message_id": "msg_002c",
+      "from": { "name": "Nina Kowalski", "email": "nina@vectrix.io" },
+      "to": [
+        { "name": "Priya Chandran", "email": "priya@vectrix.io" },
+        { "name": "Marcus Webb", "email": "marcus@vectrix.io" }
+      ],
+      "cc": [],
+      "bcc": [],
+      "date": "2026-01-20T14:51:00-08:00",
+      "body_text": "Hi both,\n\nI've downloaded the questionnaire and done a first pass. Here's how I'd suggest splitting it up:\n\n- Sections 1, 3, 5, 7, 8, 9 (Data Security, Incident Response, Business Continuity, Vendor Management, Encryption, Physical Security) — I can handle these with some input from Jordan on the infra side.\n- Sections 2 + 6 (Access Control, Data Residency) — Marcus, these need you.\n- Section 4 (Compliance) — Priya, I'll draft and you review. I'll pull the Type I report from Drive.\n\nI'll set up a shared doc in Drive so we can track which questions are answered vs. in progress. Will send the link shortly.\n\nOne flag: question 38 asks for our data breach notification policy and timeline. I don't think we have a formal written version of this yet — just the Vanta controls. Marcus, is there something in the codebase docs or should I draft something from scratch?\n\nThanks!\nNina",
+      "body_html": "<p>Hi both,</p><p>I've downloaded the questionnaire and done a first pass. Here's how I'd suggest splitting it up:</p><ul><li>Sections 1, 3, 5, 7, 8, 9 (Data Security, Incident Response, Business Continuity, Vendor Management, Encryption, Physical Security) — I can handle these with some input from Jordan on the infra side.</li><li>Sections 2 + 6 (Access Control, Data Residency) — Marcus, these need you.</li><li>Section 4 (Compliance) — Priya, I'll draft and you review. I'll pull the Type I report from Drive.</li></ul><p>I'll set up a shared doc in Drive so we can track which questions are answered vs. in progress. Will send the link shortly.</p><p>One flag: question 38 asks for our data breach notification policy and timeline. I don't think we have a formal written version of this yet — just the Vanta controls. Marcus, is there something in the codebase docs or should I draft something from scratch?</p><p>Thanks!<br>Nina</p>",
+      "attachments": [],
+      "in_reply_to": "msg_002b",
+      "references": ["msg_002a", "msg_002b"],
+      "labels": ["INBOX"],
+      "is_read": true,
+      "is_starred": false,
+      "signature": "Thanks! Nina"
+    }
+  ]
+}

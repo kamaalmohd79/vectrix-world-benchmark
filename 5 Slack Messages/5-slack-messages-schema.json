@@ -17,7 +17,7 @@
       "thread_ts": null,
       "reply_count": 2,
       "reactions": [
-        {"emoji": "eyes", "users": ["U_LIAM", "U_JORDAN"], "count": 2}
+        { "emoji": "eyes", "users": ["U_LIAM", "U_JORDAN"], "count": 2 }
       ],
       "edited": false,
       "edited_ts": null,
@@ -37,7 +37,7 @@
       "thread_ts": "1738920600.000100",
       "reply_count": 0,
       "reactions": [
-        {"emoji": "white_check_mark", "users": ["U_MARCUS"], "count": 1}
+        { "emoji": "white_check_mark", "users": ["U_MARCUS"], "count": 1 }
       ],
       "edited": false,
       "edited_ts": null,
@@ -57,7 +57,7 @@
       "thread_ts": null,
       "reply_count": 0,
       "reactions": [
-        {"emoji": "rocket", "users": ["U_MARCUS", "U_SOFIA"], "count": 2}
+        { "emoji": "rocket", "users": ["U_MARCUS", "U_SOFIA"], "count": 2 }
       ],
       "edited": false,
       "edited_ts": null,
@@ -113,9 +113,7 @@
       "text": "bug. filter state lives in the URL params, endpoint switch does a full navigation reset. unrelated to the index change. file it — i'll pick it up next sprint if it's not blocking anything.",
       "thread_ts": null,
       "reply_count": 0,
-      "reactions": [
-        {"emoji": "thumbsup", "users": ["U_SOFIA"], "count": 1}
-      ],
+      "reactions": [{ "emoji": "thumbsup", "users": ["U_SOFIA"], "count": 1 }],
       "edited": false,
       "edited_ts": null,
       "attachments": [],
