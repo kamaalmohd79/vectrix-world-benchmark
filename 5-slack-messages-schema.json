@@ -1,0 +1,127 @@
+{
+  "channel": {
+    "id": "C07VECTRIX02",
+    "name": "engineering",
+    "purpose": "Engineering discussion",
+    "topic": "Deploy announcements, debugging, code reviews"
+  },
+  "messages": [
+    {
+      "ts": "1738920600.000100",
+      "user": {
+        "id": "U_MARCUS",
+        "handle": "marcus",
+        "name": "Marcus Webb"
+      },
+      "text": "heads up — I'm pushing a change to the Kafka consumer config this afternoon. going to bump the max.poll.records from 500 to 1000 and tighten the session timeout. should improve ingestion lag we've been seeing on high-traffic orgs. staging deploy first, watching metrics for 30 min before prod. will post here when it's live.\n\n1. consumer group: `vectrix-ingest-prod`\n2. change: `max.poll.records=1000`, `session.timeout.ms=30000`\n3. rollback plan: revert commit `a3f92d1`, Jordan has the runbook\n\nliam, can you sanity check the ingestion pipeline handles the higher batch size without hammering the ClickHouse write buffer?",
+      "thread_ts": null,
+      "reply_count": 2,
+      "reactions": [
+        {"emoji": "eyes", "users": ["U_LIAM", "U_JORDAN"], "count": 2}
+      ],
+      "edited": false,
+      "edited_ts": null,
+      "attachments": [],
+      "files": [],
+      "mentions": ["U_LIAM"],
+      "is_pinned": false
+    },
+    {
+      "ts": "1738921200.000200",
+      "user": {
+        "id": "U_LIAM",
+        "handle": "liam",
+        "name": "Liam Nakamura"
+      },
+      "text": "should be fine. buffer flushes every 500ms regardless of batch size. only risk is if the write latency spikes and batches start queuing — keep an eye on `clickhouse_insert_query_latency_ms` p95 in Grafana during the window.",
+      "thread_ts": "1738920600.000100",
+      "reply_count": 0,
+      "reactions": [
+        {"emoji": "white_check_mark", "users": ["U_MARCUS"], "count": 1}
+      ],
+      "edited": false,
+      "edited_ts": null,
+      "attachments": [],
+      "files": [],
+      "mentions": [],
+      "is_pinned": false
+    },
+    {
+      "ts": "1738922100.000300",
+      "user": {
+        "id": "U_JORDAN",
+        "handle": "jordan.o",
+        "name": "Jordan Okafor"
+      },
+      "text": "🚀 deployed v0.15.3 to prod. kafka config changes are live. watching.",
+      "thread_ts": null,
+      "reply_count": 0,
+      "reactions": [
+        {"emoji": "rocket", "users": ["U_MARCUS", "U_SOFIA"], "count": 2}
+      ],
+      "edited": false,
+      "edited_ts": null,
+      "attachments": [
+        {
+          "service_name": "Grafana",
+          "title": "vectrix-prod / kafka-consumer-lag",
+          "title_link": "https://vectrix.grafana.net/d/kafka-lag/consumer-lag?orgId=1&from=now-1h&to=now",
+          "text": "Live dashboard — consumer lag by topic",
+          "author_name": "jordan.o",
+          "color": "#F46800"
+        }
+      ],
+      "files": [],
+      "mentions": [],
+      "is_pinned": false
+    },
+    {
+      "ts": "1738944000.000400",
+      "user": {
+        "id": "U_SOFIA",
+        "handle": "sofia",
+        "name": "Sofia Gutierrez"
+      },
+      "text": "hey quick question — on the endpoint detail page, when a user applies a time range filter and then switches endpoints, the filter resets to default 🙃 is that intentional or a bug? feels wrong but want to check before I file anything\n\n(also @liam noticed this while testing the compound index fix — might be related?)",
+      "thread_ts": null,
+      "reply_count": 0,
+      "reactions": [],
+      "edited": false,
+      "edited_ts": null,
+      "attachments": [],
+      "files": [
+        {
+          "id": "F07ABC991",
+          "name": "filter-reset-bug.png",
+          "mimetype": "image/png",
+          "size_bytes": 198400,
+          "url_private": "https://files.slack.com/files-pri/T07VECTRIX-F07ABC991/filter-reset-bug.png",
+          "thumb_360": "https://files.slack.com/files-tmb/T07VECTRIX-F07ABC991/filter-reset-bug_360.png",
+          "uploaded_by": "U_SOFIA"
+        }
+      ],
+      "mentions": ["U_LIAM"],
+      "is_pinned": false
+    },
+    {
+      "ts": "1738944900.000500",
+      "user": {
+        "id": "U_LIAM",
+        "handle": "liam",
+        "name": "Liam Nakamura"
+      },
+      "text": "bug. filter state lives in the URL params, endpoint switch does a full navigation reset. unrelated to the index change. file it — i'll pick it up next sprint if it's not blocking anything.",
+      "thread_ts": null,
+      "reply_count": 0,
+      "reactions": [
+        {"emoji": "thumbsup", "users": ["U_SOFIA"], "count": 1}
+      ],
+      "edited": false,
+      "edited_ts": null,
+      "attachments": [],
+      "files": [],
+      "mentions": [],
+      "is_pinned": false
+    }
+  ]
+}
